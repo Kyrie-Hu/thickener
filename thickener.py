@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import math
-#import numpy
+import numpy
 
 
 class thickener_simulation():
@@ -52,8 +52,8 @@ class thickener_simulation():
         k3 = 0.0049       #k3 = ki-u(ps-pl)/(Ap)
         vp = 1.825        #矿浆颗粒沉降速度
         h = 6             #h(y1,y2) = 6m ---- 泥层界面高度（假设不变）
-        Ps = 0.01         #固体浓度
-        #Q = Qin*Φin     #进料矿浆体积
+        #Ps = 1520         #固体浓度,初始值为y2(t)/k0
+
 
         #计算底流料浆流量Y1(k)
         c1_1 = math.sqrt((k0*pow(self.Uk,2)-d+C)/K)   #将复杂的开方式转换为一个常数
@@ -64,24 +64,25 @@ class thickener_simulation():
 
 
         # 计算底流料浆浓度Y2(k)
-        Φ = self.Cin/(Ps*(1-self.Cin)+self.Cin)
-        Q = self.Qin*Φ
+        Φ = self.Cin/(Ps*(1-self.Cin)+self.Cin)   #体积浓度Φ=Cin/(Ps(1-Cin)+Cin)
+        Q = self.Qin*Φ                            #Q = Qin*Φin     进料矿浆体积
         c2_1 = 1/(k2*h)
         c2_2 = k1*vp*Q
         c2_3 = (k1*(ki-k3)*vp*Q)/(self.Y2+k3*Q)
-        print('1')
-        print(c2_3)
         c2_4 = (pow(self.Y2,2)*self.Y1)/(self.Y2+k3*Q)
         incre2 = c2_1*(c2_2+c2_3-c2_4)   #单位步长后的浓度增量
         y2 = self.Y2 + incre2            #单位步长后的浓度
-        #print(y2)
+
+        print(c2_3)
+        print(c2_4)
 
         self.Y2 = y2
         self.Y1 = y1
 
 
+
 if __name__ == "__main__":
-    ts = thickener_simulation(620,0.22,50,370,0.325)   #类的实例化
+    ts = thickener_simulation(620,0.22,660,370,0.325)   #类的实例化
     ts.reset()
 
 
