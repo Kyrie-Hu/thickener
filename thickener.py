@@ -11,29 +11,21 @@ class thickener_simulation():
         self.Y1 = Y1
         self.Y2 = Y2
 
+
+
+
     def reset(self):
-        width = 150
-        t_0 = [0]
-        for i in range(1,width):
-            t_0.append(i/width)
-        Y_1 = []
-        Y_2 = []
         for i in range(0,width):
-            ts.computation()
+            ts.computation(width)
             #print(self.Y1)
             Y_1.append(self.Y1)
             #print(self.Y2)
             Y_2.append(self.Y2)
-        print(Y_1)
-        print(Y_2)
-        print(t_0)
-        plt.plot(t_0,Y_1)
-        plt.show()
-        plt.plot(t_0,Y_2)
-        plt.show()
+        # print(Y_1)
+        # print(Y_2)
+        # print(t_0)
 
-
-    def computation(self):
+    def computation(self,width):
 
         #计算Y1用到的系数
         k0 = 0.56         #系数
@@ -53,12 +45,11 @@ class thickener_simulation():
         vp = 1.825        #矿浆颗粒沉降速度
         h = 6             #h(y1,y2) = 6m ---- 泥层界面高度（假设不变）
         #Ps = 1520         #固体浓度,初始值为y2(t)/k0
-
+        Ps = 4300  # 固体浓度,初始值为y2(t)/k0
 
         #计算底流料浆流量Y1(k)
         c1_1 = math.sqrt((k0*pow(self.Uk,2)-d+C)/K)   #将复杂的开方式转换为一个常数
-        #print(c1)
-        incre1 = (c1_1-self.Y1)/T     #单位步长的流量增量
+        incre1 = (c1_1-self.Y1)/T/width     #单位步长的流量增量
         y1 = self.Y1+incre1        #单位步长后的流量
         #print(y1)
 
@@ -70,20 +61,36 @@ class thickener_simulation():
         c2_2 = k1*vp*Q
         c2_3 = (k1*(ki-k3)*vp*Q)/(self.Y2+k3*Q)
         c2_4 = (pow(self.Y2,2)*self.Y1)/(self.Y2+k3*Q)
-        incre2 = c2_1*(c2_2+c2_3-c2_4)   #单位步长后的浓度增量
+        incre2 = c2_1*(c2_2+c2_3-c2_4)/width   #单位步长后的浓度增量
         y2 = self.Y2 + incre2            #单位步长后的浓度
-
-        print(c2_3)
-        print(c2_4)
 
         self.Y2 = y2
         self.Y1 = y1
 
 
 
+
 if __name__ == "__main__":
-    ts = thickener_simulation(620,0.22,660,370,0.325)   #类的实例化
-    ts.reset()
+    #ts = thickener_simulation(620, 0.22, 660, 370, 0.325)  # 类的实例化
+    ts = thickener_simulation(600, 0.25, 660, 300, 0.5)  # 类的实例化
+    width = 1000
+    times = 100
+    t_0 = []
+    for i in range(0,times):
+        for j in range(0,width):
+            t_0.append(i+j/width)
+    print(t_0)
+    Y_1 = []
+    Y_2 = []
+    for i in range(0,times):
+        ts.reset()
+
+    plt.plot(t_0, Y_1)
+    plt.show()
+    plt.plot(t_0, Y_2)
+    plt.show()
+
+
 
 
 
