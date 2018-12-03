@@ -44,8 +44,7 @@ class thickener_simulation():
         k3 = 0.0049       #k3 = ki-u(ps-pl)/(Ap)
         vp = 1.825        #矿浆颗粒沉降速度
         h = 6             #h(y1,y2) = 6m ---- 泥层界面高度（假设不变）
-        #Ps = 1520         #固体浓度,初始值为y2(t)/k0
-        Ps = 4300  # 固体浓度,初始值为y2(t)/k0
+        Ps = 1520         #固体浓度,初始值为y2(t)/k0
 
         #计算底流料浆流量Y1(k)
         c1_1 = math.sqrt((k0*pow(self.Uk,2)-d+C)/K)   #将复杂的开方式转换为一个常数
